@@ -78,7 +78,7 @@ final rol = (result['correo']['rol'] ?? 'admin').toString().toLowerCase();
           Center(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(22),
                 child: screenWidth < 800
                     ? _buildLoginForm(context, width: screenWidth * 0.9)
                     : _buildLoginForm(context, width: 400),
@@ -95,10 +95,10 @@ final rol = (result['correo']['rol'] ?? 'admin').toString().toLowerCase();
       // Centra el Container horizontalmente
       child: Container(
         width: width,
-        padding: const EdgeInsets.all(35),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Form(
           key: _formKey,
@@ -114,18 +114,18 @@ final rol = (result['correo']['rol'] ?? 'admin').toString().toLowerCase();
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 50,
+                    fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(height: 30), //separador
+              const SizedBox(height: 40), //separador
               const Text(
-                'Iniciar Sesión',
+                'Bienvenido',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -155,7 +155,7 @@ final rol = (result['correo']['rol'] ?? 'admin').toString().toLowerCase();
               const SizedBox(height: 25),
               _loading
                   ? const CircularProgressIndicator()
-                  : button.CustomButton(text: 'Ingresar', onPressed: _login),
+                  : button.CustomButton(text: 'Iniciar Session', onPressed: _login),
             ],
           ),
         ),

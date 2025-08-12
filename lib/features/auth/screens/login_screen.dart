@@ -1,9 +1,12 @@
+//ARCHIVO lib/features/auth/screens/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:mantenimientovehiculos/core/services/auth_service.dart';
 import 'package:mantenimientovehiculos/shared/widgets/custom_input.dart'
     as input;
 import 'package:mantenimientovehiculos/shared/widgets/custom_button.dart'
     as button;
+import 'package:mantenimientovehiculos/core/services/session_manager.dart';
+import 'package:mantenimientovehiculos/core/models/user_session.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,17 +42,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     setState(() => _loading = false);
 
-    if (result['exito']) {
-      _showMessage('Inicio de sesión exitoso', success: true);
-final rol = (result['correo']['rol'] ?? 'admin').toString().toLowerCase();
+if (result['exito']) {
+  _showMessage('Inicio de sesión exitoso', success: true);
 
-      if (rol == 'admin') {
-        Navigator.pushNamed(context, '/admin');
-      } else if (rol == 'operador') {
-        Navigator.pushNamed(context, '/operador');
-      } else if (rol == 'conductor') {
-        Navigator.pushNamed(context, '/conductor');
-      }
+  final nombre = result['correo']['nombreCompleto'] ?? '';
+  final rol = result['correo']['rol']?.toString().toLowerCase() ?? 'admin';
+
+  SessionManager().setUser(UserSession(nombreCompleto: nombre, rol: rol));
+
+  if (rol == 'admin') {
+    Navigator.pushNamed(context, '/admin');
+  } else if (rol == 'operador') {
+    Navigator.pushNamed(context, '/operador');
+  } else if (rol == 'conductor') {
+    Navigator.pushNamed(context, '/conductor');
+  }
+
     } else {
       _showMessage(result['mensaje'] ?? 'Error desconocido');
     }

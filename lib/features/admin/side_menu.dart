@@ -1,16 +1,32 @@
+//ARCHIVO lib/features/admin/side_menu.dart
 import 'package:flutter/material.dart';
 
 class SideMenu extends StatelessWidget {
   final String selectedRoute;
   final String role;
+  final String nombreCompleto;
   final Function(String route) onItemSelected;
 
   const SideMenu({
     super.key,
     required this.selectedRoute,
     required this.role,
+    required this.nombreCompleto,
     required this.onItemSelected,
   });
+  
+String _getRolLabel(String rol) {
+  switch (rol) {
+    case 'admin':
+      return 'Administrador';
+    case 'operador':
+      return 'Operador';
+    case 'conductor':
+      return 'Conductor';
+    default:
+      return 'Usuario';
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +56,10 @@ class SideMenu extends StatelessWidget {
                 height: 150,
               ),
             ),
-            if (role == 'admin') _buildHeader(context, 'Menú Administrativo'),//mostrar card 
-            if (role == 'operador') _buildHeader(context, 'Menú Operador'),//mostrar card
-            if (role == 'conductor') _buildHeader(context, 'Bienvenido: userCuatro | Menú Adminsitrativo'),//mostrar card
+            
+_buildHeader(context, 'Bienvenido: $nombreCompleto | Menú ${_getRolLabel(role)}'),
+
+           
             ...visibleItems.map((item) {
               final isSelected = selectedRoute.contains(item.route);
               return Container(

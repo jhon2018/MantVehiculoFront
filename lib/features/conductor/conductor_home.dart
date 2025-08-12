@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mantenimientovehiculos/features/admin/side_menu.dart';
 
 class ConductorHome extends StatelessWidget {
   const ConductorHome({super.key});
@@ -6,7 +7,16 @@ class ConductorHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('Bienvenido Conductor')),
+      drawer: SideMenu(
+        role: 'conductor',
+        selectedRoute: ModalRoute.of(context)?.settings.name ?? '',
+        onItemSelected: (route) {
+          Navigator.pop(context); // Cierra el drawer
+          Navigator.pushReplacementNamed(context, '/$route');
+        }, 
+      ),
+      appBar: AppBar(title: const Text('PANEL CONDUCTOR')),
+      body: const Center(child: Text('Bienvenido Conductor')),
     );
   }
 }

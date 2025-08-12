@@ -1,4 +1,4 @@
-// ARCHIVO auth_service.dart
+// ARCHIVO lib/core/services/auth_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -20,11 +20,7 @@ class AuthService {
           'data': {'correo': correo, 'password': password},
         }),
       );
-      // final response = await http.post(
-      //   url,
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({'correo': correo, 'password': password}),
-      // );
+
 
       if (response.headers['content-type']?.contains('application/json') ??
           false) {

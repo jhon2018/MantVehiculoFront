@@ -42,22 +42,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     setState(() => _loading = false);
 
-if (result['exito']) {
-  _showMessage('Inicio de sesión exitoso', success: true);
+    if (result['exito']) {
+      _showMessage('Inicio de sesión exitoso', success: true);
+      final nombre = (result['correo']['nombreCompleto'] ?? '').toString();
+      final rol = (result['correo']['rol'] ?? 'admin').toString().toLowerCase();
+      final token = result['token']?.toString();
 
-  final nombre = result['correo']['nombreCompleto'] ?? '';
-  final rol = result['correo']['rol']?.toString().toLowerCase() ?? 'admin';
+      SessionManager().setUser(UserSession(
+        nombreCompleto: nombre,
+        rol: rol,
+        token: token,
+      ));
 
-  SessionManager().setUser(UserSession(nombreCompleto: nombre, rol: rol));
-
-  if (rol == 'admin') {
-    Navigator.pushNamed(context, '/admin');
-  } else if (rol == 'operador') {
-    Navigator.pushNamed(context, '/operador');
-  } else if (rol == 'conductor') {
-    Navigator.pushNamed(context, '/conductor');
-  }
-
+      if (rol == 'admin') {
+        Navigator.pushNamed(context, '/admin');
+      } else if (rol == 'operador') {
+        Navigator.pushNamed(context, '/operador');
+      } else if (rol == 'conductor') {
+        Navigator.pushNamed(context, '/conductor');
+      }
     } else {
       _showMessage(result['mensaje'] ?? 'Error desconocido');
     }
@@ -163,7 +166,8 @@ if (result['exito']) {
               const SizedBox(height: 25),
               _loading
                   ? const CircularProgressIndicator()
-                  : button.CustomButton(text: 'Iniciar Session', onPressed: _login),
+                  : button.CustomButton(
+                      text: 'Iniciar Session', onPressed: _login),
             ],
           ),
         ),

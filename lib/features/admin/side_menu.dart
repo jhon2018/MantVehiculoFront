@@ -1,5 +1,6 @@
 //ARCHIVO lib/features/admin/side_menu.dart
 import 'package:flutter/material.dart';
+import 'package:mantenimientovehiculos/core/services/session_manager.dart';
 
 class SideMenu extends StatelessWidget {
   final String selectedRoute;
@@ -14,30 +15,36 @@ class SideMenu extends StatelessWidget {
     required this.nombreCompleto,
     required this.onItemSelected,
   });
-  
-String _getRolLabel(String rol) {
-  switch (rol) {
-    case 'admin':
-      return 'Administrador';
-    case 'operador':
-      return 'Operador';
-    case 'conductor':
-      return 'Conductor';
-    default:
-      return 'Usuario';
+
+  String _getRolLabel(String rol) {
+    switch (rol) {
+      case 'admin':
+        return 'Administrador';
+      case 'operador':
+        return 'Operador';
+      case 'conductor':
+        return 'Conductor';
+      default:
+        return 'Usuario';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     final allItems = [
-      _MenuItem('Conductor', 'conductor', 'assets/icons/driver.png',['admin', 'conductor']),
-      _MenuItem('Detalle Reparación', 'repair_detail','assets/icons/repair_detail.png', ['admin', 'conductor']),
-      _MenuItem('Mantenimiento', 'maintenance', 'assets/icons/maintenance.png',['admin', 'conductor', 'operador']),
-      _MenuItem('Proveedor', 'supplier', 'assets/icons/supplier.png',['admin', 'conductor']),
-      _MenuItem('Tipo Reparación', 'repair_type','assets/icons/repair_type.png', ['admin', 'conductor']),
+      _MenuItem('Conductor', 'conductor', 'assets/icons/driver.png',
+          ['admin', 'conductor']),
+      _MenuItem('Detalle Reparación', 'repair_detail',
+          'assets/icons/repair_detail.png', ['admin', 'conductor']),
+      _MenuItem('Mantenimiento', 'maintenance', 'assets/icons/maintenance.png',
+          ['admin', 'conductor', 'operador']),
+      _MenuItem('Proveedor', 'supplier', 'assets/icons/supplier.png',
+          ['admin', 'conductor']),
+      _MenuItem('Tipo Reparación', 'repair_type',
+          'assets/icons/repair_type.png', ['admin', 'conductor']),
       _MenuItem('Usuario', 'user', 'assets/icons/user.png', ['admin']),
-      _MenuItem('Vehículo', 'vehicle', 'assets/icons/vehicle.png',['admin', 'conductor']),
+      _MenuItem('Vehículo', 'vehicle', 'assets/icons/vehicle.png',
+          ['admin', 'conductor']),
     ];
 
     final visibleItems =
@@ -56,10 +63,8 @@ String _getRolLabel(String rol) {
                 height: 150,
               ),
             ),
-            
-_buildHeader(context, 'Bienvenido: $nombreCompleto | Menú ${_getRolLabel(role)}'),
-
-           
+            _buildHeader(context,
+                'Bienvenido: $nombreCompleto | Menú ${_getRolLabel(role)}'),
             ...visibleItems.map((item) {
               final isSelected = selectedRoute.contains(item.route);
               return Container(
@@ -112,8 +117,10 @@ _buildHeader(context, 'Bienvenido: $nombreCompleto | Menú ${_getRolLabel(role)}
                               style: TextStyle(color: Color(0xFFDB7018)),
                             ),
                             onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.pushReplacementNamed(context, '/');
+                              Navigator.of(context).pop(); // cierra diálogo
+                              SessionManager().clear();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/', (route) => false);
                             },
                           ),
                         ],

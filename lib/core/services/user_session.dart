@@ -1,5 +1,5 @@
 // ARCHIVO lib/core/services/session_manager.dart
-import '../models/user_session.dart';
+import 'package:mantenimientovehiculos/core/models/user_session.dart';
 
 class SessionManager {
   static final SessionManager _instance = SessionManager._internal();
@@ -20,4 +20,3 @@ class SessionManager {
 
   bool get isLoggedIn => _user != null;
 }
-

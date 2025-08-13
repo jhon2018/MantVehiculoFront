@@ -32,19 +32,19 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final allItems = [
-      _MenuItem('Conductor', 'conductor', 'assets/icons/driver.png',
+      _MenuItem('Dashboard', 'repair_detail', 'assets/icons/repair_detail.png',
           ['admin', 'conductor']),
-      _MenuItem('Detalle Reparación', 'repair_detail',
-          'assets/icons/repair_detail.png', ['admin', 'conductor']),
-      _MenuItem('Mantenimiento', 'maintenance', 'assets/icons/maintenance.png',
-          ['admin', 'conductor', 'operador']),
-      _MenuItem('Proveedor', 'supplier', 'assets/icons/supplier.png',
-          ['admin', 'conductor']),
-      _MenuItem('Tipo Reparación', 'repair_type',
-          'assets/icons/repair_type.png', ['admin', 'conductor']),
-      _MenuItem('Usuario', 'user', 'assets/icons/user.png', ['admin']),
       _MenuItem('Vehículo', 'vehicle', 'assets/icons/vehicle.png',
           ['admin', 'conductor']),
+      _MenuItem('Conductor', 'conductor', 'assets/icons/driver.png',
+          ['admin', 'conductor']),
+      _MenuItem('Proveedor', 'supplier', 'assets/icons/supplier.png',
+          ['admin', 'conductor']),
+      _MenuItem('Mantenimiento', 'maintenance', 'assets/icons/maintenance.png',
+          ['admin', 'conductor', 'operador']),
+      _MenuItem('Reporte', 'repair_type', 'assets/icons/repair_type.png',
+          ['admin', 'conductor']),
+      _MenuItem('Usuario', 'user', 'assets/icons/user.png', ['admin']),
     ];
 
     final visibleItems =
@@ -63,8 +63,10 @@ class SideMenu extends StatelessWidget {
                 height: 150,
               ),
             ),
-            _buildHeader(context,
-                'Bienvenido: $nombreCompleto | Menú ${_getRolLabel(role)}'),
+            _buildHeader(
+              context,
+              'Bienvenido: $nombreCompleto\nMenú ${_getRolLabel(role)}',
+            ),
             ...visibleItems.map((item) {
               final isSelected = selectedRoute.contains(item.route);
               return Container(
@@ -84,7 +86,8 @@ class SideMenu extends StatelessWidget {
                   leading: Image.asset(item.iconPath, width: 25, height: 25),
                   title: Text(item.label),
                   selected: isSelected,
-                  onTap: () => onItemSelected(item.route),
+                  onTap: () => onItemSelected(
+                      item.route), //recibe la ruta del item seleccionado
                 ),
               );
             }).toList(),

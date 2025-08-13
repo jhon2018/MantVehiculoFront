@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
         nombreCompleto: nombre,
         rol: rol,
         token: token,
-      ));
+      ));//PARA proximos metodos que necesiten el token del backend
 
       if (rol == 'admin') {
         Navigator.pushNamed(context, '/admin');

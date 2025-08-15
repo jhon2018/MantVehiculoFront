@@ -43,77 +43,80 @@ class _VehiculosTableState extends State<VehiculosTable> {
     }
   }
 
-  Future<void> fetchVehiculos() async {
-    setState(() {
-      isLoading = true;
-      errorMsg = null;
-    });
+Future<void> fetchVehiculos() async {
+  setState(() {
+    isLoading = true;
+    errorMsg = null;
+  });
 
-    try {
-      final response = await http.post(
-        Uri.parse('https://proxy-serverestoy.onrender.com/proxy'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'endpoint': '/api/Vehiculo/listarPaginas',
-          'method': 'GET',
-          'params': {
-            'page': currentPage,
-            'pageSize': pageSize,
-            'search': widget.searchTerm,
-          },
-        }),
-      );
+  try {
+    // Si hay búsqueda, pedir TODOS los registros
+    final bool buscarGlobal = widget.searchTerm.trim().isNotEmpty;
 
-      final contentType = response.headers['content-type'] ?? '';
-      if (!contentType.contains('application/json')) {
-        setState(
-            () => errorMsg = 'Respuesta inesperada del servidor (no es JSON)');
-      } else {
-        final decoded = json.decode(response.body);
-        if (response.statusCode == 200 && decoded is Map<String, dynamic>) {
-          var lista =
-              List<Map<String, dynamic>>.from(decoded['vehiculos'] ?? const []);
+    final response = await http.post(
+      Uri.parse('https://proxy-serverestoy.onrender.com/proxy'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'endpoint': '/api/Vehiculo/listarPaginas',
+        'method': 'GET',
+        'params': buscarGlobal
+            ? { 'page': 1, 'pageSize': 999999 } // grande para traer todo
+            : { 'page': currentPage, 'pageSize': pageSize },
+      }),
+    );
 
-          // 🔹 Filtro en cliente si backend no implementa search
-          if (widget.searchTerm.trim().isNotEmpty) {
-            final term = widget.searchTerm.toLowerCase();
-            lista = lista.where((v) {
-              final placa = (v['placa'] ?? '').toString().toLowerCase();
-              final marca = (v['marca'] ?? '').toString().toLowerCase();
-              final modelo = (v['modelo'] ?? '').toString().toLowerCase();
-              return placa.contains(term) ||
-                  marca.contains(term) ||
-                  modelo.contains(term);
-            }).toList();
-          }
-
-          // 🔹 Ordenar por fecha más reciente siempre
-          lista.sort((a, b) {
-            final fa =
-                DateTime.tryParse((a['fecha_compra'] ?? '').toString()) ??
-                    DateTime(1900);
-            final fb =
-                DateTime.tryParse((b['fecha_compra'] ?? '').toString()) ??
-                    DateTime(1900);
-            return fb.compareTo(fa);
-          });
-
-          setState(() {
-            totalRegistros = (decoded['totalRegistros'] ?? lista.length) as int;
-            vehiculos = lista;
-          });
-        } else {
-          setState(() => errorMsg = decoded is Map && decoded['mensaje'] != null
-              ? decoded['mensaje'].toString()
-              : 'Error del servidor (${response.statusCode})');
-        }
-      }
-    } catch (e) {
-      setState(() => errorMsg = 'Error de conexión: $e');
-    } finally {
-      if (mounted) setState(() => isLoading = false);
+    final contentType = response.headers['content-type'] ?? '';
+    if (!contentType.contains('application/json')) {
+      setState(() => errorMsg = 'Respuesta inesperada del servidor (no es JSON)');
+      return;
     }
+
+    final decoded = json.decode(response.body);
+    if (response.statusCode == 200 && decoded is Map<String, dynamic>) {
+      var lista = List<Map<String, dynamic>>.from(decoded['vehiculos'] ?? const []);
+
+      // Filtrar en cliente si hay búsqueda
+      if (buscarGlobal) {
+        final term = widget.searchTerm.toLowerCase();
+        lista = lista.where((v) {
+          final placa = (v['placa'] ?? '').toString().toLowerCase();
+          final marca = (v['marca'] ?? '').toString().toLowerCase();
+          final modelo = (v['modelo'] ?? '').toString().toLowerCase();
+          return placa.contains(term) || marca.contains(term) || modelo.contains(term);
+        }).toList();
+
+        // Ordenar por fecha más reciente
+        lista.sort((a, b) {
+          final fa = DateTime.tryParse((a['fecha_compra'] ?? '').toString()) ?? DateTime(1900);
+          final fb = DateTime.tryParse((b['fecha_compra'] ?? '').toString()) ?? DateTime(1900);
+          return fb.compareTo(fa);
+        });
+
+        // Volver a paginar en front
+        totalRegistros = lista.length;
+        final start = (currentPage - 1) * pageSize;
+        final end = start + pageSize;
+        lista = lista.sublist(start, end > lista.length ? lista.length : end);
+
+      } else {
+        totalRegistros = (decoded['totalRegistros'] ?? lista.length) as int;
+      }
+
+      setState(() {
+        vehiculos = lista;
+      });
+    } else {
+      setState(() => errorMsg = decoded is Map && decoded['mensaje'] != null
+          ? decoded['mensaje'].toString()
+          : 'Error del servidor (${response.statusCode})');
+    }
+  } catch (e) {
+    setState(() => errorMsg = 'Error de conexión: $e');
+  } finally {
+    if (mounted) setState(() => isLoading = false);
   }
+}
+
 
   void _scheduleFetch() {
     _debounce?.cancel();

@@ -200,6 +200,7 @@ return LayoutBuilder(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   columns: const [
+                    DataColumn(label: Text('ID')),
                     DataColumn(label: Text('Placa')),
                     DataColumn(label: Text('Marca')),
                     DataColumn(label: Text('Modelo')),
@@ -207,6 +208,7 @@ return LayoutBuilder(
                     DataColumn(label: Text('Acciones')),
                   ],
                   rows: vehiculos.map<DataRow>((vehiculo) {
+                    final id_Vehiculo = (vehiculo['id_Vehiculo'] ?? '').toString();
                     final placa = (vehiculo['placa'] ?? '').toString();
                     final marca = (vehiculo['marca'] ?? '').toString();
                     final modelo = (vehiculo['modelo'] ?? '').toString();
@@ -215,6 +217,7 @@ return LayoutBuilder(
 
                     return DataRow(
                       cells: [
+                        DataCell(Text(id_Vehiculo)),
                         DataCell(Text(placa)),
                         DataCell(Text(marca)),
                         DataCell(Text(modelo)),

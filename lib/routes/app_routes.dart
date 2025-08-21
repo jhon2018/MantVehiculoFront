@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:mantenimientovehiculos/features/auth/screens/login_screen.dart';
 import 'package:mantenimientovehiculos/features/admin/admin_home.dart';
-import 'package:mantenimientovehiculos/features/conductor/conductor_home.dart'; 
+import 'package:mantenimientovehiculos/features/conductor/conductor_home.dart';
+import 'package:mantenimientovehiculos/features/conductor/screens/conductores_screen.dart'; 
 import 'package:mantenimientovehiculos/features/operador/operador_home.dart';
 import 'package:mantenimientovehiculos/features/vehiculos/screens/vehiculos_screen.dart'; 
 
@@ -14,6 +15,7 @@ class AppRoutes {
     '/operador': (context) => const OperadorHome(),
     
     '/vehicle': (context) => const VehiculosScreen(),
+    '/conductores': (context) => const ConductoresScreen(),
 
   };
 }

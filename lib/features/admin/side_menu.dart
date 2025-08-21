@@ -36,7 +36,7 @@ class SideMenu extends StatelessWidget {
           ['admin', 'conductor']),
       _MenuItem('Vehículo', 'vehicle', 'assets/icons/vehicle.png',
           ['admin', 'conductor']),
-      _MenuItem('Conductor', 'conductor', 'assets/icons/driver.png',
+      _MenuItem('Conductor', 'conductores', 'assets/icons/driver.png',
           ['admin', 'conductor']),
       _MenuItem('Proveedor', 'supplier', 'assets/icons/supplier.png',
           ['admin', 'conductor']),

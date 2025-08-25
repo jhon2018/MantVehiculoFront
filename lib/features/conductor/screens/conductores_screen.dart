@@ -76,14 +76,14 @@ class _ConductoresScreenState extends State<ConductoresScreen> {
                 const SizedBox(width: 12),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    final result = await showDialog<bool>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => ModalRegistrarConductor(),
-                    );
-                    if (result == true) {
-                      setState(() {}); // recargas la tabla
-                    }
+                    // final result = await showDialog<bool>(
+                    //   context: context,
+                    //   barrierDismissible: false,
+                    //   builder: (context) => ModalRegistrarConductor(),
+                    // );
+                    // if (result == true) {
+                    //   setState(() {}); // recargas la tabla
+                    // }
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('Agregar'),
